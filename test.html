@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ selectedTour: null, darkMode: false }" :class="{ 'dark': darkMode }" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,15 +11,32 @@
       backdrop-filter: blur(8px);
       background-color: rgba(255, 255, 255, 0.15);
     }
+    .zoom-hover:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-green-100 to-blue-50 text-gray-800" x-data="{ selectedTour: null }">
+<body class="bg-gradient-to-br from-green-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 relative">
+
+  <!-- Navbar -->
+  <header class="fixed w-full bg-white dark:bg-gray-900 shadow z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Loch & Legend</h1>
+      <nav class="space-x-4 hidden md:block">
+        <a href="#tours" class="hover:underline">Tours</a>
+        <a href="#footer" class="hover:underline">Contact</a>
+        <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700">🌙</button>
+      </nav>
+      <button @click="open = !open" class="md:hidden">☰</button>
+    </div>
+  </header>
 
   <!-- Hero Section -->
   <section class="relative h-screen bg-cover bg-center" style="background-image: url('https://www.sykescottages.co.uk/inspiration/wp-content/uploads/Scotland-small-2400x1573.jpg');">
     <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-center text-white px-4">
-      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">Loch & Legend Tours</h1>
-      <p class="text-xl max-w-xl">Uncover the magic of Scotland: Explore epic citys, wonderful nature and the legendary Scottish Whisky.</p>
+      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg animate__animated animate__fadeInDown">Loch & Legend Tours</h1>
+      <p class="text-xl max-w-xl animate__animated animate__fadeInUp">Uncover the magic of Scotland: Explore epic cities, wonderful nature and the legendary Scottish Whisky.</p>
       <a href="#tours" class="mt-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full shadow-md hover:bg-yellow-500 transition">View Our Tours</a>
     </div>
   </section>
@@ -31,7 +48,8 @@
       <template x-for="tour in [
         {
           id: 1,
-          name: 'Whisky',
+          name: 'Whisky Tour',
+          badge: 'Popular',
           short: '7-day journey through misty mountains and lochs.',
           details: 'Travel from Edinburgh to Glencoe, the Isle of Skye, and Loch Ness. Includes guided hikes, whisky tastings, and local storytelling.',
           images: [
@@ -41,7 +59,8 @@
         },
         {
           id: 2,
-          name: 'Edingburgh',
+          name: 'Skye Adventure',
+          badge: 'New',
           short: '5-day island adventure.',
           details: 'Explore Skye’s Fairy Pools, Quiraing mountains, and harbor villages. Perfect for nature lovers and photographers.',
           images: [
@@ -52,6 +71,7 @@
         {
           id: 3,
           name: 'Edinburgh & Castles',
+          badge: '',
           short: '4-day cultural exploration.',
           details: 'Tour Edinburgh Castle, Royal Mile, and ancient fortresses across the Lowlands. Includes historic inns and local cuisine.',
           images: [
@@ -60,41 +80,47 @@
           ]
         }
       ]" :key="tour.id">
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer" @click="selectedTour = tour">
-          <img :src="tour.images[0]" class="w-full h-48 object-cover" />
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="selectedTour = tour">
+          <div class="relative">
+            <img :src="tour.images[0]" class="w-full h-48 object-cover zoom-hover" />
+            <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge"></span>
+          </div>
           <div class="p-5">
             <h3 class="text-2xl font-bold mb-1" x-text="tour.name"></h3>
-            <p class="text-gray-600" x-text="tour.short"></p>
+            <p class="text-gray-600 dark:text-gray-300" x-text="tour.short"></p>
           </div>
         </div>
       </template>
     </div>
   </section>
 
-  <!-- Tour Popup -->
+  <!-- Tour Popup Modal -->
   <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
-    <div class="bg-white p-6 rounded-xl max-w-2xl w-full shadow-xl relative">
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-2xl w-full shadow-xl relative">
       <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl" @click="selectedTour = null">✖</button>
       <div class="grid md:grid-cols-2 gap-4 mb-4">
         <template x-for="img in selectedTour?.images">
-          <img :src="img" class="rounded object-cover w-full h-48" />
+          <img :src="img" class="rounded object-cover w-full h-48 transition duration-300 ease-in-out transform hover:scale-105" />
         </template>
       </div>
       <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-      <p class="mb-4 text-gray-700" x-text="selectedTour?.details"></p>
+      <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
       <div class="text-center">
         <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
       </div>
     </div>
   </div>
 
+  <!-- Scroll to Top Button -->
+  <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
+
   <!-- Footer -->
-  <footer class="text-center py-10 bg-white border-t mt-16">
-    <p class="text-gray-500">&copy; 2025 Warning: This is not a real travel agency. It is not possible to interact with us in more detail. All rights reserved.</p>
+  <footer id="footer" class="text-center py-10 bg-white dark:bg-gray-900 border-t mt-16">
+    <p class="text-gray-500 dark:text-gray-400">&copy; 2025 Warning: This is not a real travel agency. It is not possible to interact with us in more detail. All rights reserved.</p>
     <div class="mt-4 space-x-4">
-      <a href="#" class="text-blue-600 hover:underline">Contact</a>
-      <a href="#" class="text-blue-600 hover:underline">Terms</a>
-      <a href="#" class="text-blue-600 hover:underline">Privacy</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Contact</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy</a>
     </div>
   </footer>
 
