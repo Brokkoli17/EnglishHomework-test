@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ selectedTour: null, darkMode: false }" :class="{ 'dark': darkMode }" class="scroll-smooth">
+<html lang="en" x-data="app()" x-init="init()" :class="{ 'dark': darkMode }" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,44 +50,8 @@
   <section id="tours" class="py-20 px-6 max-w-7xl mx-auto">
     <h2 class="text-4xl font-bold text-center mb-12">Our Tours</h2>
     <div class="grid md:grid-cols-3 gap-10">
-      <template x-for="tour in [
-        {
-          id: 1,
-          name: 'Whisky Tour',
-          badge: 'Popular',
-          short: '7-day journey through misty mountains and lochs.',
-          details: 'Travel from Edinburgh to Glencoe, the Isle of Skye, and Loch Ness. Includes guided hikes, whisky tastings, and local storytelling. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit hendrerit lorem, at sollicitudin elit. Mauris nec lorem vel neque iaculis posuere.',
-          images: [
-            'https://fein-geist.de/wp-content/uploads/2023/09/dalwhinnie-winter-gold-800x800.jpeg',
-            'https://erlbaum.com/wp-content/uploads/2021/06/shutterstock_543830512-2048x1363.jpg',
-            'https://lindoresabbeydistillery.com/wp-content/uploads/2022/04/20-SQ-600x600.jpg'
-          ]
-        },
-        {
-          id: 2,
-          name: 'Skye Adventure',
-          badge: 'New',
-          short: '5-day island adventure.',
-          details: 'Explore Skye’s Fairy Pools, Quiraing mountains, and harbor villages. Perfect for nature lovers and photographers.',
-          images: [
-            'https://edinburghtipps.de/images/edinburgh_sehenswurdigkeiten.jpg',
-            'https://www.merian.de/uploads/media/jalag-content-image/03/11533-iStock-guven-ozdemir-sehenswuerdigkeit-in-edinburgh-victoria-street.webp?v=1-0',
-            'https://cdn.getyourguide.com/img/tour/38ba5ed660e58d9f5b4160adcebb62142626a55710c0a87c91418bfa2273801a.jpg/98.jpg'
-          ]
-        },
-        {
-          id: 3,
-          name: 'Edinburgh & Castles',
-          badge: '',
-          short: '4-day cultural exploration.',
-          details: 'Tour Edinburgh Castle, Royal Mile, and ancient fortresses across the Lowlands. Includes historic inns and local cuisine.',
-          images: [
-            'https://cdn.britannica.com/58/129458-050-5CB24D25/map-cities-Scotland-boundaries-location.jpg',
-            'https://res.cloudinary.com/woltersrundreisen/image/upload/c_fit,f_webp,h_375,w_375/shutterstock_121234648'
-          ]
-        }
-      ]" :key="tour.id">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="selectedTour = tour">
+      <template x-for="tour in tours" :key="tour.id">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="openTour(tour)">
           <div class="relative">
             <img :src="tour.images[0]" class="w-full h-48 object-cover zoom-hover" />
             <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge"></span>
@@ -101,58 +65,43 @@
     </div>
   </section>
 
- <!-- Tour Popup Modal with Swiper Carousel -->
-<div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition
-     x-init="$nextTick(() => {
-        if (window.swiper) window.swiper.destroy(true, true);
-        window.swiper = new Swiper('.mySwiper', {
-          loop: true,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-          },
-        });
-     })">
-  <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
-    <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
+  <!-- Tour Popup Modal with Swiper Carousel -->
+  <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
+      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
 
-    <!-- Swiper -->
-    <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden">
-      <div class="swiper-wrapper">
-        <template x-for="img in selectedTour?.images">
-          <div class="swiper-slide">
-            <img :src="img" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
-          </div>
-        </template>
+      <!-- Swiper -->
+      <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden">
+        <div class="swiper-wrapper">
+          <template x-for="img in selectedTour?.images">
+            <div class="swiper-slide">
+              <img :src="img" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
+            </div>
+          </template>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
       </div>
-      <!-- Navigation -->
-      <div class="swiper-button-next text-gray-700 dark:text-white hover:text-yellow-400"></div>
-      <div class="swiper-button-prev text-gray-700 dark:text-white hover:text-yellow-400"></div>
-      <div class="swiper-pagination mt-2"></div>
-    </div>
 
-    <!-- Scrollable content -->
-    <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
-      <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-      <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
-    </div>
+      <!-- Scrollable content -->
+      <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
+        <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
+        <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
+      </div>
 
-    <div class="text-center mt-4">
-      <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
+      <div class="text-center mt-4">
+        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
+      </div>
     </div>
   </div>
-</div>
 
   <!-- Scroll to Top Button -->
   <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
 
   <!-- Footer -->
   <footer id="footer" class="text-center py-10 bg-white dark:bg-gray-900 border-t mt-16">
-    <p class="text-gray-500 dark:text-gray-400">&copy; 2025 Warning: This is not a real travel agency. It is not possible to interact with us in more detail. All rights reserved.</p>
+    <p class="text-gray-500 dark:text-gray-400">&copy; 2025 Warning: This is not a real travel agency. All rights reserved.</p>
     <div class="mt-4 space-x-4">
       <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Contact</a>
       <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms</a>
@@ -160,5 +109,69 @@
     </div>
   </footer>
 
+  <!-- AlpineJS app logic -->
+  <script>
+    function app() {
+      return {
+        darkMode: false,
+        selectedTour: null,
+        tours: [
+          {
+            id: 1,
+            name: 'Whisky Tour',
+            badge: 'Popular',
+            short: '7-day journey through misty mountains and lochs.',
+            details: 'Travel from Edinburgh to Glencoe, the Isle of Skye, and Loch Ness. Includes guided hikes, whisky tastings, and local storytelling.',
+            images: [
+              'https://fein-geist.de/wp-content/uploads/2023/09/dalwhinnie-winter-gold-800x800.jpeg',
+              'https://erlbaum.com/wp-content/uploads/2021/06/shutterstock_543830512-2048x1363.jpg',
+              'https://lindoresabbeydistillery.com/wp-content/uploads/2022/04/20-SQ-600x600.jpg'
+            ]
+          },
+          {
+            id: 2,
+            name: 'Skye Adventure',
+            badge: 'New',
+            short: '5-day island adventure.',
+            details: 'Explore Skye’s Fairy Pools, Quiraing mountains, and harbor villages. Perfect for nature lovers and photographers.',
+            images: [
+              'https://edinburghtipps.de/images/edinburgh_sehenswurdigkeiten.jpg',
+              'https://www.merian.de/uploads/media/jalag-content-image/03/11533-iStock-guven-ozdemir-sehenswuerdigkeit-in-edinburgh-victoria-street.webp?v=1-0',
+              'https://cdn.getyourguide.com/img/tour/38ba5ed660e58d9f5b4160adcebb62142626a55710c0a87c91418bfa2273801a.jpg/98.jpg'
+            ]
+          },
+          {
+            id: 3,
+            name: 'Edinburgh & Castles',
+            badge: '',
+            short: '4-day cultural exploration.',
+            details: 'Tour Edinburgh Castle, Royal Mile, and ancient fortresses across the Lowlands. Includes historic inns and local cuisine.',
+            images: [
+              'https://cdn.britannica.com/58/129458-050-5CB24D25/map-cities-Scotland-boundaries-location.jpg',
+              'https://res.cloudinary.com/woltersrundreisen/image/upload/c_fit,f_webp,h_375,w_375/shutterstock_121234648'
+            ]
+          }
+        ],
+        init() {},
+        openTour(tour) {
+          this.selectedTour = tour;
+          this.$nextTick(() => {
+            if (this.swiper) this.swiper.destroy(true, true);
+            this.swiper = new Swiper('.mySwiper', {
+              loop: true,
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              },
+              pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+              },
+            });
+          });
+        }
+      }
+    }
+  </script>
 </body>
 </html>
