@@ -101,36 +101,51 @@
     </div>
   </section>
 
-  <!-- Tour Popup Modal with Swiper Carousel -->
-  <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
-    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
-      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
+ <!-- Tour Popup Modal with Swiper Carousel -->
+<div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition
+     x-init="$nextTick(() => {
+        if (window.swiper) window.swiper.destroy(true, true);
+        window.swiper = new Swiper('.mySwiper', {
+          loop: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+        });
+     })">
+  <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
+    <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
 
-      <!-- Swiper -->
-      <div class="swiper mySwiper mb-4 rounded">
-        <div class="swiper-wrapper">
-          <template x-for="img in selectedTour?.images">
-            <div class="swiper-slide">
-              <img :src="img" class="object-cover w-full h-64 rounded" />
-            </div>
-          </template>
-        </div>
-        <div class="swiper-button-next text-gray-700 dark:text-white"></div>
-        <div class="swiper-button-prev text-gray-700 dark:text-white"></div>
-        <div class="swiper-pagination"></div>
+    <!-- Swiper -->
+    <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden">
+      <div class="swiper-wrapper">
+        <template x-for="img in selectedTour?.images">
+          <div class="swiper-slide">
+            <img :src="img" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
+          </div>
+        </template>
       </div>
+      <!-- Navigation -->
+      <div class="swiper-button-next text-gray-700 dark:text-white hover:text-yellow-400"></div>
+      <div class="swiper-button-prev text-gray-700 dark:text-white hover:text-yellow-400"></div>
+      <div class="swiper-pagination mt-2"></div>
+    </div>
 
-      <!-- Scrollable content -->
-      <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
-        <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-        <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
-      </div>
+    <!-- Scrollable content -->
+    <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
+      <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
+      <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
+    </div>
 
-      <div class="text-center mt-4">
-        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
-      </div>
+    <div class="text-center mt-4">
+      <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
     </div>
   </div>
+</div>
 
   <!-- Scroll to Top Button -->
   <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
@@ -145,25 +160,5 @@
     </div>
   </footer>
 
-  <!-- Swiper Init Script -->
-  <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.effect(() => {
-        if (Alpine.store('selectedTour')) {
-          new Swiper(".mySwiper", {
-            loop: true,
-            navigation: {
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            },
-            pagination: {
-              el: ".swiper-pagination",
-              clickable: true,
-            },
-          });
-        }
-      });
-    });
-  </script>
 </body>
 </html>
