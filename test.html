@@ -4,13 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Loch & Legend Tours</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+  <!-- Alpine.js -->
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+
+  <!-- SwiperJS CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
   <style>
-    .glass {
-      backdrop-filter: blur(8px);
-      background-color: rgba(255, 255, 255, 0.15);
-    }
     .zoom-hover:hover {
       transform: scale(1.05);
       transition: transform 0.3s ease;
@@ -28,15 +33,15 @@
         <a href="#footer" class="hover:underline">Contact</a>
         <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700">🌙</button>
       </nav>
-      <button @click="open = !open" class="md:hidden">☰</button>
+      <button class="md:hidden">☰</button>
     </div>
   </header>
 
   <!-- Hero Section -->
   <section class="relative h-screen bg-cover bg-center" style="background-image: url('https://www.sykescottages.co.uk/inspiration/wp-content/uploads/Scotland-small-2400x1573.jpg');">
     <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-center text-white px-4">
-      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg animate__animated animate__fadeInDown">Loch & Legend Tours</h1>
-      <p class="text-xl max-w-xl animate__animated animate__fadeInUp">Uncover the magic of Scotland: Explore epic cities, wonderful nature and the legendary Scottish Whisky.</p>
+      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">Loch & Legend Tours</h1>
+      <p class="text-xl max-w-xl">Uncover the magic of Scotland: Explore epic cities, wonderful nature and the legendary Scottish Whisky.</p>
       <a href="#tours" class="mt-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full shadow-md hover:bg-yellow-500 transition">View Our Tours</a>
     </div>
   </section>
@@ -51,10 +56,11 @@
           name: 'Whisky Tour',
           badge: 'Popular',
           short: '7-day journey through misty mountains and lochs.',
-          details: 'Travel from Edinburgh to Glencoe, the Isle of Skye, and Loch Ness. Includes guided hikes, whisky tastings, and local storytelling.',
+          details: 'Travel from Edinburgh to Glencoe, the Isle of Skye, and Loch Ness. Includes guided hikes, whisky tastings, and local storytelling. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit hendrerit lorem, at sollicitudin elit. Mauris nec lorem vel neque iaculis posuere.',
           images: [
             'https://fein-geist.de/wp-content/uploads/2023/09/dalwhinnie-winter-gold-800x800.jpeg',
-            'https://erlbaum.com/wp-content/uploads/2021/06/shutterstock_543830512-2048x1363.jpg'
+            'https://erlbaum.com/wp-content/uploads/2021/06/shutterstock_543830512-2048x1363.jpg',
+            'https://images.unsplash.com/photo-1579547621706-1a9c79d5ffa1'
           ]
         },
         {
@@ -65,7 +71,8 @@
           details: 'Explore Skye’s Fairy Pools, Quiraing mountains, and harbor villages. Perfect for nature lovers and photographers.',
           images: [
             'https://edinburghtipps.de/images/edinburgh_sehenswurdigkeiten.jpg',
-            'https://images.unsplash.com/photo-1585139495642-3b3d8234916d'
+            'https://images.unsplash.com/photo-1585139495642-3b3d8234916d',
+            'https://images.unsplash.com/photo-1582271330181-0847b17f7da0'
           ]
         },
         {
@@ -94,18 +101,32 @@
     </div>
   </section>
 
-  <!-- Tour Popup Modal -->
+  <!-- Tour Popup Modal with Swiper Carousel -->
   <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
-    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-2xl w-full shadow-xl relative">
-      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl" @click="selectedTour = null">✖</button>
-      <div class="grid md:grid-cols-2 gap-4 mb-4">
-        <template x-for="img in selectedTour?.images">
-          <img :src="img" class="rounded object-cover w-full h-48 transition duration-300 ease-in-out transform hover:scale-105" />
-        </template>
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
+      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
+
+      <!-- Swiper -->
+      <div class="swiper mySwiper mb-4 rounded">
+        <div class="swiper-wrapper">
+          <template x-for="img in selectedTour?.images">
+            <div class="swiper-slide">
+              <img :src="img" class="object-cover w-full h-64 rounded" />
+            </div>
+          </template>
+        </div>
+        <div class="swiper-button-next text-gray-700 dark:text-white"></div>
+        <div class="swiper-button-prev text-gray-700 dark:text-white"></div>
+        <div class="swiper-pagination"></div>
       </div>
-      <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-      <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
-      <div class="text-center">
+
+      <!-- Scrollable content -->
+      <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
+        <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
+        <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
+      </div>
+
+      <div class="text-center mt-4">
         <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
       </div>
     </div>
@@ -124,5 +145,25 @@
     </div>
   </footer>
 
+  <!-- Swiper Init Script -->
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.effect(() => {
+        if (Alpine.store('selectedTour')) {
+          new Swiper(".mySwiper", {
+            loop: true,
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+              el: ".swiper-pagination",
+              clickable: true,
+            },
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
