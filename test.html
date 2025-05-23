@@ -11,7 +11,7 @@
   <!-- Alpine.js -->
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
 
-  <!-- SwiperJS CSS & JS -->
+  <!-- SwiperJS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
@@ -31,9 +31,9 @@
       <nav class="space-x-4 hidden md:block">
         <a href="#tours" class="hover:underline">Tours</a>
         <a href="#footer" class="hover:underline">Contact</a>
-        <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700">🌙</button>
+        <button @click="darkMode = !darkMode" aria-label="Toggle Dark Mode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700">🌙</button>
       </nav>
-      <button class="md:hidden">☰</button>
+      <button class="md:hidden" aria-label="Menu">☰</button>
     </div>
   </header>
 
@@ -51,31 +51,31 @@
     <h2 class="text-4xl font-bold text-center mb-12">Our Tours</h2>
     <div class="grid md:grid-cols-3 gap-10">
       <template x-for="tour in tours" :key="tour.id">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="openTour(tour)">
+        <article @click="openTour(tour)" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105">
           <div class="relative">
-            <img :src="tour.images[0]" class="w-full h-48 object-cover zoom-hover" />
+            <img :src="tour.images[0]" alt="" class="w-full h-48 object-cover zoom-hover" />
             <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge"></span>
           </div>
           <div class="p-5">
             <h3 class="text-2xl font-bold mb-1" x-text="tour.name"></h3>
             <p class="text-gray-600 dark:text-gray-300" x-text="tour.short"></p>
           </div>
-        </div>
+        </article>
       </template>
     </div>
   </section>
 
-  <!-- Tour Popup Modal with Swiper Carousel -->
+  <!-- Modal -->
   <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
     <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
-      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
+      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null" aria-label="Close Modal">✖</button>
 
       <!-- Swiper -->
       <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden">
         <div class="swiper-wrapper">
           <template x-for="img in selectedTour?.images">
             <div class="swiper-slide">
-              <img :src="img" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
+              <img :src="img" alt="" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
             </div>
           </template>
         </div>
@@ -84,7 +84,7 @@
         <div class="swiper-pagination"></div>
       </div>
 
-      <!-- Scrollable content -->
+      <!-- Content -->
       <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
         <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
         <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
@@ -96,8 +96,8 @@
     </div>
   </div>
 
-  <!-- Scroll to Top Button -->
-  <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
+  <!-- Scroll to Top -->
+  <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" aria-label="Scroll to Top" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
 
   <!-- Footer -->
   <footer id="footer" class="text-center py-10 bg-white dark:bg-gray-900 border-t mt-16">
@@ -109,12 +109,13 @@
     </div>
   </footer>
 
-  <!-- AlpineJS app logic -->
+  <!-- AlpineJS Logic -->
   <script>
     function app() {
       return {
         darkMode: false,
         selectedTour: null,
+        swiper: null,
         tours: [
           {
             id: 1,
