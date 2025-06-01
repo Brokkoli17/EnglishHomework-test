@@ -30,30 +30,65 @@
       border-radius: 1rem;
       overflow: hidden;
     }
+    /* Popup scroll area */
+    .popup-content {
+      max-height: 30vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+      line-height: 1.6;
+      font-size: 1rem;
+      color: #1f2937; /* Tailwind gray-800 */
+    }
+    .dark .popup-content {
+      color: #d1d5db; /* Tailwind gray-300 */
+    }
+    /* Read more/less inline styling */
+    .read-toggle {
+      color: #2563eb; /* Tailwind blue-600 */
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
+      margin-left: 0.25rem;
+    }
+    .dark .read-toggle {
+      color: #60a5fa; /* Tailwind blue-400 */
+    }
+    /* Scrollbar styling for popup content */
+    .popup-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .popup-content::-webkit-scrollbar-thumb {
+      background-color: #a0aec0; /* Tailwind gray-400 */
+      border-radius: 3px;
+    }
+    /* Dark mode scrollbar */
+    .dark .popup-content::-webkit-scrollbar-thumb {
+      background-color: #4b5563; /* Tailwind gray-600 */
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-green-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 font-sans antialiased">
+<body class="bg-gradient-to-br from-green-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 relative">
 
   <!-- Navbar -->
   <header class="fixed w-full bg-white dark:bg-gray-900 shadow z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-3xl font-extrabold tracking-tight">Loch & Legend</h1>
-      <nav class="space-x-4 hidden md:block text-lg">
+      <h1 class="text-2xl font-bold">Loch & Legend</h1>
+      <nav class="space-x-4 hidden md:block">
         <a href="#tours" class="hover:underline">Tours</a>
         <a href="#map-section" class="hover:underline">Map</a>
         <a href="#footer" class="hover:underline">Contact</a>
-        <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700">🌙</button>
+        <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700" aria-label="Toggle Dark Mode">🌙</button>
       </nav>
-      <button class="md:hidden">☰</button>
+      <button class="md:hidden" aria-label="Open menu">☰</button>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="relative h-screen bg-cover bg-center flex items-center justify-center text-center" style="background-image: url('https://www.sykescottages.co.uk/inspiration/wp-content/uploads/Scotland-small-2400x1573.jpg');">
-    <div class="bg-black bg-opacity-50 p-10 rounded-xl max-w-2xl">
-      <h1 class="text-5xl md:text-6xl font-extrabold text-white drop-shadow mb-4">Loch & Legend Tours</h1>
-      <p class="text-xl text-white mb-6">Uncover the magic of Scotland: Explore epic cities, nature, and the legendary Scottish Whisky.</p>
-      <a href="#tours" class="inline-block bg-yellow-400 text-gray-900 font-bold px-6 py-3 rounded-full shadow hover:bg-yellow-500 transition">View Our Tours</a>
+  <section class="relative h-screen bg-cover bg-center" style="background-image: url('https://www.sykescottages.co.uk/inspiration/wp-content/uploads/Scotland-small-2400x1573.jpg');" role="img" aria-label="Scotland landscape with hills and sky">
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-center text-white px-4">
+      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">Loch & Legend Tours</h1>
+      <p class="text-xl max-w-xl">Uncover the magic of Scotland: Explore epic cities, wonderful nature and the legendary Scottish Whisky.</p>
+      <a href="#tours" class="mt-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full shadow-md hover:bg-yellow-500 transition focus:outline-none focus:ring-4 focus:ring-yellow-300">View Our Tours</a>
     </div>
   </section>
 
@@ -62,16 +97,16 @@
     <h2 class="text-4xl font-bold text-center mb-12">Our Tours</h2>
     <div class="grid md:grid-cols-3 gap-10">
       <template x-for="tour in tours" :key="tour.id">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="openTour(tour)">
+        <article tabindex="0" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" @click="openTour(tour)" @keydown.enter="openTour(tour)" @keydown.space.prevent="openTour(tour)" role="button" :aria-label="'Open details for ' + tour.name">
           <div class="relative">
-            <img :src="tour.images[0]" class="w-full h-48 object-cover zoom-hover" />
-            <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge"></span>
+            <img :src="tour.images[0]" :alt="'Image of ' + tour.name" class="w-full h-48 object-cover zoom-hover" />
+            <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge" aria-live="polite"></span>
           </div>
           <div class="p-5">
             <h3 class="text-2xl font-bold mb-1" x-text="tour.name"></h3>
             <p class="text-gray-600 dark:text-gray-300" x-text="tour.short"></p>
           </div>
-        </div>
+        </article>
       </template>
     </div>
   </section>
@@ -79,60 +114,53 @@
   <!-- Map Section -->
   <section id="map-section" class="py-20 px-6 max-w-7xl mx-auto">
     <h2 class="text-4xl font-bold text-center mb-12">Tour Map</h2>
-    <div id="map"></div>
+    <div id="map" role="region" aria-label="Map showing tour locations"></div>
   </section>
 
   <!-- Tour Popup Modal with Swiper Carousel -->
-  <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition>
-    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden">
-      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null">✖</button>
+  <div x-show="selectedTour" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4" x-transition
+       role="dialog" aria-modal="true" :aria-labelledby="'tour-title-'+selectedTour?.id" @keydown.escape.window="selectedTour = null">
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-3xl w-full shadow-xl relative max-h-[90vh] overflow-hidden focus:outline-none" tabindex="0">
+      <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null" aria-label="Close tour details">✖</button>
 
       <!-- Swiper -->
-      <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden">
+      <div class="swiper mySwiper mb-4 rounded-xl overflow-hidden" aria-label="Image gallery for tour">
         <div class="swiper-wrapper">
-          <template x-for="img in selectedTour?.images">
+          <template x-for="img in selectedTour?.images" :key="img">
             <div class="swiper-slide">
-              <img :src="img" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
+              <img :src="img" :alt="'Image for ' + selectedTour?.name" class="object-cover w-full h-72 md:h-80 rounded-xl shadow" />
             </div>
           </template>
         </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next image"></div>
+        <div class="swiper-button-prev" tabindex="0" role="button" aria-label="Previous image"></div>
         <div class="swiper-pagination"></div>
       </div>
 
       <!-- Scrollable content with Read More -->
-      <div class="overflow-y-auto pr-2" style="max-height: 30vh;" x-data="{ expanded: false }">
-        <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-        <p class="mb-4 text-gray-700 dark:text-gray-300">
-          <template x-if="!expanded">
-            <span x-text="selectedTour?.details.split(' ').slice(0, 10).join(' ') + '...'" ></span>
-          </template>
-          <template x-if="expanded">
-            <span x-text="selectedTour?.details"></span>
-          </template>
+      <div class="popup-content" x-data="{ expanded: false }" aria-live="polite" aria-atomic="true">
+        <h2 class="text-3xl font-bold mb-2" :id="'tour-title-'+selectedTour?.id" x-text="selectedTour?.name"></h2>
+        <p class="mb-4" x-html="expanded ? selectedTour?.details.replace(/\n/g, '<br>') : (selectedTour?.details.split(' ').slice(0, 25).join(' ') + '...')">
         </p>
-        <button @click="expanded = !expanded" class="text-blue-600 dark:text-blue-400 underline">
-          <span x-text="expanded ? 'Read less' : 'Read more'"></span>
-        </button>
+        <button type="button" class="read-toggle" @click="expanded = !expanded" x-text="expanded ? 'Read less' : 'Read more'"></button>
       </div>
 
       <div class="text-center mt-4">
-        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition" @click="selectedTour = null">Close</button>
+        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-4 focus:ring-green-400" @click="selectedTour = null" aria-label="Close tour modal">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Scroll to Top Button -->
-  <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50">↑</button>
+  <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-white text-lg p-3 rounded-full shadow-lg z-50 focus:outline-none focus:ring-4 focus:ring-yellow-300" aria-label="Scroll to top">↑</button>
 
   <!-- Footer -->
   <footer id="footer" class="text-center py-10 bg-white dark:bg-gray-900 border-t mt-16">
     <p class="text-gray-500 dark:text-gray-400">&copy; 2025 Warning: This is not a real travel agency. All rights reserved.</p>
     <div class="mt-4 space-x-4">
-      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Contact</a>
-      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms</a>
-      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400">Contact</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400">Terms</a>
+      <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400">Privacy</a>
     </div>
   </footer>
 
@@ -217,30 +245,36 @@
           }
         ],
         init() {
-          const map = L.map('map').setView([56.4907, -4.2026], 6);
+          // Initialize Leaflet map
+          const map = L.map('map').setView([56.4907, -4.2026], 6); // Center on Scotland
+
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution:
+              '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           }).addTo(map);
 
-          const markers = [
-            { lat: 55.9533, lng: -3.1883, text: 'Edinburgh Castle' },
-            { lat: 56.6826, lng: -5.1024, text: 'Glencoe' },
-            { lat: 57.4125, lng: -6.1941, text: 'Isle of Skye' },
-            { lat: 57.3229, lng: -4.4244, text: 'Loch Ness' },
-            { lat: 49.40000, lng: -8.17990, text: 'germany' },
-            { lat: 49.45432, lng: 8.16004, text: 'Vukscha Sebia Botschaft🇷🇸' } 
-          ];
+          // Add markers for tours
+          const markers = {
+            1: [55.9486, -3.1999], // Edinburgh Castle
+            2: [57.3229, -4.4244], // Loch Ness
+            3: [57.4595, -3.1256], // Whisky Trail (Speyside region)
+          };
 
-          markers.forEach(m => {
-            L.marker([m.lat, m.lng]).addTo(map).bindPopup(m.text);
-          });
+          for (const tour of this.tours) {
+            const marker = L.marker(markers[tour.id]).addTo(map);
+            marker.bindPopup(`<strong>${tour.name}</strong><br>${tour.short}`).on('click', () => {
+              this.openTour(tour);
+            });
+          }
         },
         openTour(tour) {
           this.selectedTour = tour;
           this.$nextTick(() => {
-            if (this.swiper) this.swiper.destroy(true, true);
+            // Initialize Swiper for popup images
+            if (this.swiper) {
+              this.swiper.destroy(true, true);
+            }
             this.swiper = new Swiper('.mySwiper', {
-              loop: true,
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -249,6 +283,9 @@
                 el: '.swiper-pagination',
                 clickable: true,
               },
+              loop: true,
+              keyboard: true,
+              a11y: true,
             });
           });
         }
@@ -257,4 +294,3 @@
   </script>
 </body>
 </html>
-
