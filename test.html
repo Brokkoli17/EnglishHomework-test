@@ -62,19 +62,14 @@
     <h2 class="text-4xl font-bold text-center mb-12">Our Tours</h2>
     <div class="grid md:grid-cols-3 gap-10">
       <template x-for="tour in tours" :key="tour.id">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105">
-          <div class="relative" @click="openTour(tour)">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105" @click="openTour(tour)">
+          <div class="relative">
             <img :src="tour.images[0]" class="w-full h-48 object-cover zoom-hover" />
             <span x-show="tour.badge" class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full" x-text="tour.badge"></span>
           </div>
           <div class="p-5">
             <h3 class="text-2xl font-bold mb-1" x-text="tour.name"></h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              <span x-text="expanded === tour.id ? tour.short : tour.short.split(' ').slice(0, 10).join(' ') + '...'"></span>
-              <button class="text-blue-500 underline ml-2"
-                      @click.stop="expanded = expanded === tour.id ? null : tour.id"
-                      x-text="expanded === tour.id ? 'Read less' : 'Read more'"></button>
-            </p>
+            <p class="text-gray-600 dark:text-gray-300" x-text="tour.short"></p>
           </div>
         </div>
       </template>
@@ -106,10 +101,20 @@
         <div class="swiper-pagination"></div>
       </div>
 
-      <!-- Scrollable content -->
-      <div class="overflow-y-auto pr-2" style="max-height: 30vh;">
+      <!-- Scrollable content with Read More -->
+      <div class="overflow-y-auto pr-2" style="max-height: 30vh;" x-data="{ expanded: false }">
         <h2 class="text-3xl font-bold mb-2" x-text="selectedTour?.name"></h2>
-        <p class="mb-4 text-gray-700 dark:text-gray-300" x-text="selectedTour?.details"></p>
+        <p class="mb-4 text-gray-700 dark:text-gray-300">
+          <template x-if="!expanded">
+            <span x-text="selectedTour?.details.split(' ').slice(0, 10).join(' ') + '...'" ></span>
+          </template>
+          <template x-if="expanded">
+            <span x-text="selectedTour?.details"></span>
+          </template>
+        </p>
+        <button @click="expanded = !expanded" class="text-blue-600 dark:text-blue-400 underline">
+          <span x-text="expanded ? 'Read less' : 'Read more'"></span>
+        </button>
       </div>
 
       <div class="text-center mt-4">
@@ -137,8 +142,6 @@
       return {
         darkMode: false,
         selectedTour: null,
-        selectedTour: null,
-        expanded: null,
         tours: [
           {
             id: 1,
@@ -173,42 +176,6 @@
             images: [
               'https://cdn.britannica.com/58/129458-050-5CB24D25/map-cities-Scotland-boundaries-location.jpg',
               'https://res.cloudinary.com/woltersrundreisen/image/upload/c_fit,f_webp,h_375,w_375/shutterstock_121234648'
-            ]
-          },
-          {
-            id: 4,
-            name: 'Loch Ness Mystery',
-            badge: 'Featured',
-            short: 'Discover the secrets of Loch Ness.',
-            details: 'Boat rides, monster myths, and scenic hikes around the legendary lake. Perfect for families and explorers.',
-            images: [
-              'https://cdn.britannica.com/50/177250-050-44264511/Loch-Ness-Scotland.jpg',
-              'https://www.visit-ross-shire.co.uk/media/1159/loch-ness-banner.jpg',
-              'https://cdn.getyourguide.com/img/location/5e1f8b00269d0.jpeg/99.jpg'
-            ]
-          },
-          {
-            id: 5,
-            name: 'Highlands Hiking',
-            badge: '',
-            short: 'Explore Scotland’s rugged Highlands on foot.',
-            details: 'Guided hikes through Glencoe, Ben Nevis, and surrounding landscapes. Ideal for adventure seekers.',
-            images: [
-              'https://www.walkhighlands.co.uk/images/scotland/glencoe-glacier.jpg',
-              'https://cdn.britannica.com/39/153839-050-6F6B244F/Ben-Nevis-mountain-Scotland.jpg',
-              'https://cdn.getyourguide.com/img/tour/5e1f7ebc9d1c2.jpeg/99.jpg'
-            ]
-          },
-          {
-            id: 6,
-            name: 'Edinburgh Ghost Walk',
-            badge: 'Spooky',
-            short: 'Experience the haunted history of Edinburgh.',
-            details: 'Night tours through haunted closes, graveyards, and castles. Stories of ghosts and legends included.',
-            images: [
-              'https://cdn.getyourguide.com/img/location/5f6d314479f48.jpeg/99.jpg',
-              'https://media.timeout.com/images/105240556/750/422/image.jpg',
-              'https://www.edinburgh.org/media/4xzojfkp/haunted-edinburgh-tours.jpg'
             ]
           }
         ],
@@ -252,3 +219,4 @@
   </script>
 </body>
 </html>
+
