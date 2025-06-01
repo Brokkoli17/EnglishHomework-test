@@ -124,7 +124,7 @@
       <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl" @click="selectedTour = null" aria-label="Close tour details">✖</button>
 
       <!-- Carousel (Diashow) -->
-      <div id="tourCarousel" class="carousel slide mb-4 rounded-xl overflow-hidden" data-bs-ride="carousel">
+      <div id="tourCarousel" class="carousel slide mb-4 rounded-xl overflow-hidden" data-bs-ride="carousel" data-bs-interval="3000">
         <div class="carousel-inner">
           <template x-for="(img, index) in selectedTour?.images" :key="img">
             <div :class="index === 0 ? 'carousel-item active' : 'carousel-item'">
