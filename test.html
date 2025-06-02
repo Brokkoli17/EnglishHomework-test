@@ -282,7 +282,7 @@
         openTour(tour) {
           this.selectedTour = tour;
           this.$nextTick(() => {
-            // Initialize Swiper for popup images
+            // Initialize Swiper for popup images with autoplay
             if (this.swiper) {
               this.swiper.destroy(true, true);
             }
@@ -298,6 +298,10 @@
               loop: true,
               keyboard: true,
               a11y: true,
+              autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+              },
             });
           });
         }
