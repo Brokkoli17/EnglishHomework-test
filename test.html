@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edingburgh soldiers</title>
+  <title>Loch & Legends</title>
 
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
@@ -74,7 +74,7 @@
   <!-- Navbar -->
   <header class="fixed w-full bg-white dark:bg-gray-900 shadow z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Loch & Legend</h1>
+      <h1 class="text-2xl font-bold">Loch & Legends</h1>
       <nav class="space-x-4 hidden md:block">
         <a href="#tours" class="hover:underline">Tours</a>
         <a href="#map-section" class="hover:underline">Map</a>
@@ -88,7 +88,7 @@
   <!-- Hero Section -->
   <section class="relative h-screen bg-cover bg-center" style="background-image: url('https://www.flightgift.com/media/wp/FG/2022/07/shutterstock_598314359-scaled.webp');" role="img" aria-label="Scotland landscape with hills and sky">
     <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-center text-white px-4">
-      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">Edingburgh soldiers</h1>
+      <h1 class="text-6xl font-extrabold tracking-wide mb-4 drop-shadow-lg">Loch and Legends</h1>
       <p class="text-xl max-w-xl">Explore Edingburgh, an old legend city with fantastic architecture and exciting attractions. </p>
       <a href="#tours" class="mt-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full shadow-md hover:bg-yellow-500 transition focus:outline-none focus:ring-4 focus:ring-yellow-300">View Our Tours</a>
     </div>
@@ -96,7 +96,7 @@
 
   <!-- Tours Section -->
   <section id="tours" class="py-20 px-6 max-w-7xl mx-auto">
-    <h2 class="text-4xl font-bold text-center mb-12">Our Tours</h2>
+    <h2 class="text-4xl font-bold text-center mb-12">Our best Tour-Offers</h2>
     <div class="grid md:grid-cols-3 gap-10">
       <template x-for="tour in tours" :key="tour.id">
         <article tabindex="0" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" @click="openTour(tour)" @keydown.enter="openTour(tour)" @keydown.space.prevent="openTour(tour)" role="button" :aria-label="'Open details for ' + tour.name">
@@ -148,7 +148,7 @@
       </div>
 
       <div class="text-center mt-4">
-        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-4 focus:ring-green-400" @click="selectedTour = null" aria-label="Close tour modal">Close</button>
+        <button class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-4 focus:ring-green-400" @click="selectedTour = null" aria-label="Close tour modal">Book</button>
       </div>
     </div>
   </div>
