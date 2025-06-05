@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth" :class="{ 'dark': darkMode }" x-data="app()" x-init="init()">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -69,7 +69,12 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-green-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 relative">
+<body
+  x-data="app()"
+  x-init="init(); updateDarkClass();"
+  :class="{ 'dark': darkMode }"
+  class="bg-gradient-to-br from-green-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 relative"
+>
 
   <!-- Navbar -->
   <header class="fixed w-full bg-white dark:bg-gray-900 shadow z-50">
@@ -79,7 +84,7 @@
         <a href="#tours" class="hover:underline">Tours</a>
         <a href="#map-section" class="hover:underline">Map</a>
         <a href="#footer" class="hover:underline">Contact</a>
-        <button @click="darkMode = !darkMode" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700" aria-label="Toggle Dark Mode">🌙</button>
+        <button @click="darkMode = !darkMode; updateDarkClass()" class="ml-4 px-3 py-1 rounded bg-gray-200 dark:bg-gray-700" aria-label="Toggle Dark Mode">🌙</button>
       </nav>
       <button class="md:hidden" aria-label="Open menu">☰</button>
     </div>
@@ -311,6 +316,9 @@
               },
             });
           });
+        },
+        updateDarkClass() {
+          document.documentElement.classList.toggle('dark', this.darkMode);
         }
       }
     }
